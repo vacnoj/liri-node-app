@@ -168,9 +168,33 @@ function doRandom() {
 			
 			var dataArray = data.split(",");
 			console.log(dataArray);
-			song = dataArray[1];
-			spotify(song);
+			song = dataArray[Math.floor(Math.random()*5)];
+			spotifyCall(song);
 
 		} else console.log('error: ', error);
 	});
+}
+
+function spotifyCall(song) {
+
+var spotify = new Spotify({
+	id: keys.spotifyKeys.id,
+	secret: keys.spotifyKeys.secret
+});
+
+spotify.search({ type: 'track', query: song }, function(error, data) {
+	if (!error) {
+
+		for (var i = 0; i < data.tracks.items.length; i++) {
+			console.log('____________________________________________________________');
+			console.log(`\nTitle: ${data.tracks.items[i].name}`);
+			console.log(`Album: ${data.tracks.items[i].album.name}`);
+			for (var k = 0; k < data.tracks.items[i].artists.length; k++) {
+			console.log(`Artist ${k + 1}: ${data.tracks.items[i].artists[k].name}`);
+			}
+			console.log(`Link:  ${data.tracks.items[i].external_urls.spotify}`);
+			console.log('____________________________________________________________');
+		}
+	} else console.log('error: ', error);
+});
 }
