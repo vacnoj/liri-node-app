@@ -18,6 +18,7 @@
   "homepage": "https://github.com/vacnoj/liri-node-app#readme",
   "dependencies": {
     "inquirer": "^3.3.0",
+    "node-spotify-api": "^1.0.7",
     "request": "^2.82.0",
     "twitter": "^1.7.1"
   }
