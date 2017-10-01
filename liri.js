@@ -12,25 +12,35 @@ var fs = require('fs');
 
 const password = "1";
 
-inquirer.prompt([
+var access = false;
 
-{
-	type: "password",
-	message: "waht is your password?",
-	name: "password",
-	mask: "ha"
-},
-{
-	type: "list",
-	choices: ["my-tweets", "spotify", "movie IMDB", "do what it says"],
-    message: "What do you want to do?",
-    name: "action"
-}
+inquirer.prompt([
+	{
+		type: "password",
+		message: "What is your password?",
+		name: "password",
+		mask: "ha"
+	}
+]).then(function(userpassword) {
+	if(userpassword.password == password || access) {
+		console.log(`Welcome, Jon!`);
+		access = true;
+		main();
+	} else console.log("Access Denied");
+});
+
+function main() {
+inquirer.prompt([
+	{
+		type: "list",
+		choices: ["my-tweets", "spotify", "movie IMDB", "do what it says"],
+		message: "What do you want to do?",
+		name: "action"
+	}
 ])
 
 .then(function (inquirerResponse) {
-	if(inquirerResponse.password == password) {
-		console.log(`Welcome, Jon!`);
+	
 
 		if (inquirerResponse.action === 'my-tweets') {
 			
@@ -49,8 +59,8 @@ inquirer.prompt([
 			doRandom();
 
 		}
-	} else console.log("Access Denied");
 });
+}
 
 function imdb() {
 	
@@ -92,19 +102,12 @@ function imdb() {
 				console.log('statusCode:', response && response.statusCode); 
 			
 			}
-		});
+		}); setTimeout(doAnother, 2000);
 	});
 }
 
 function tweeter() {
-	inquirer.prompt([
-		{
-			type: 'input',
-			message: 'What is your username for Twitter?',
-			name: 'twitterUserName'
-		}
-	])
-	.then(function(username) {
+
 		var client = new Twitter({
 		consumer_key: keys.twitterKeys.consumer_key,
 		consumer_secret: keys.twitterKeys.consumer_secret,
@@ -112,17 +115,17 @@ function tweeter() {
 		access_token_secret: keys.twitterKeys.access_token_secret
 	});
 
-	var params = {screen_name: username.name};
-	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+	client.get('statuses/user_timeline', function(error, tweets, response) {
 
 		if (!error) {
 			for (var i = 0; i < tweets.length && i < 20; i++) {
-				console.log(`created: ${tweets[i].created_at}`);
-				console.log(`tweet: ${tweets[i].text}`);
+				console.log('____________________________________________________________');
+				console.log(`\nCreated: ${tweets[i].created_at}`);
+				console.log(`Tweet: ${tweets[i].text}`);
+				console.log('\n____________________________________________________________');
 			}
 		} else console.log("error: ", error);
-	});
-	});
+	}); setTimeout(doAnother, 2000);
 }
 
 function spotify(song) {
@@ -156,23 +159,22 @@ function spotify(song) {
 				console.log('____________________________________________________________');
 			}
 		} else console.log('error: ', error);
-	});
+	}); setTimeout(doAnother, 2000);
 	
 	});
 }
 
 function doRandom() {
 	fs.readFile("random.txt", "utf8", function(error, data) {
-		debugger;
+
 		if (!error) {
 			
 			var dataArray = data.split(",");
-			console.log(dataArray);
 			song = dataArray[Math.floor(Math.random()*5)];
 			spotifyCall(song);
 
 		} else console.log('error: ', error);
-	});
+	}); setTimeout(doAnother, 2000);
 }
 
 function spotifyCall(song) {
@@ -196,5 +198,20 @@ spotify.search({ type: 'track', query: song }, function(error, data) {
 			console.log('____________________________________________________________');
 		}
 	} else console.log('error: ', error);
-});
+}); //setTimeout(doAnother, 2000);
+}
+
+function doAnother() {
+	inquirer.prompt([
+		{
+			type: 'confirm',
+			message: "Do you want to do another?",
+			name: 'doAnother'
+		}
+	]).then(function(doAnother) {
+		
+		if (doAnother.doAnother) {
+			main();
+		}
+	})
 }
