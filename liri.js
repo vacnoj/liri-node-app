@@ -42,23 +42,23 @@ inquirer.prompt([
 .then(function (inquirerResponse) {
 	
 
-		if (inquirerResponse.action === 'my-tweets') {
+	if (inquirerResponse.action === 'my-tweets') {
+		
+		tweeter();
 			
-			tweeter();
-				
-		} else if (inquirerResponse.action === 'spotify') {
-			
-			spotify();
+	} else if (inquirerResponse.action === 'spotify') {
+		
+		spotify();
 
-		} else if(inquirerResponse.action === "movie IMDB") {
+	} else if(inquirerResponse.action === "movie IMDB") {
 
-			imdb();
+		imdb();
 
-		} else if (inquirerResponse.action === "do what it says") {
-			
-			doRandom();
+	} else if (inquirerResponse.action === "do what it says") {
+		
+		doRandom();
 
-		}
+	}
 });
 }
 
